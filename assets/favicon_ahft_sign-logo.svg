@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="uuid-2a00939f-5477-45f1-a213-9bbad67d88e1" data-name="Слой 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 150">
+  <defs>
+    <style>
+      .uuid-2b24e4c1-a4c6-408c-874c-9c4bdcfde42d {
+        fill: none;
+      }
+
+      .uuid-15c67c5d-3e67-4bdd-9a8d-e47ee3f6b9c8 {
+        clip-path: url(#uuid-40734491-00e9-4b3c-88f4-419dab13c3ce);
+      }
+
+      .uuid-4f16ab15-3c87-4107-90a6-34c909cef103 {
+        fill-rule: evenodd;
+      }
+    </style>
+    <clipPath id="uuid-40734491-00e9-4b3c-88f4-419dab13c3ce">
+      <rect class="uuid-2b24e4c1-a4c6-408c-874c-9c4bdcfde42d" width="150" height="150"/>
+    </clipPath>
+  </defs>
+  <g id="uuid-bf653380-7b4e-46bb-82f1-17e035a10492" data-name="Слой 1">
+    <g id="uuid-300127ef-3509-4c9c-b211-f13c299b6991" data-name="ahft_sign-logo">
+      <g class="uuid-15c67c5d-3e67-4bdd-9a8d-e47ee3f6b9c8">
+        <path class="uuid-4f16ab15-3c87-4107-90a6-34c909cef103" d="M54.21,49.4h41.57v41.57h-41.57v-41.57ZM25,25h100v100h-29.21v-21.93h-41.57v21.93h-29.21V25Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

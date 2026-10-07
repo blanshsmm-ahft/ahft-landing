@@ -1,0 +1,524 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Grato Grotesk CY", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --color-bg: #f1f1f1;
+    --color-ink: #0c0c09;
+    --color-mute: #6b6b6b;
+    --color-line: #e5e5e5;
+    --color-surface: #ffffff;
+    --color-fill: #0c0c09;
+    --color-on-fill: #ffffff;
+    --color-footer: #e6e6e6;
+}
+
+:root.dark {
+    --color-bg: #0f0f11;
+    --color-ink: #ededed;
+    --color-mute: #8e8e93;
+    --color-line: #2c2c2e;
+    --color-surface: #1c1c1e;
+    --color-fill: #ededed;
+    --color-on-fill: #0f0f11;
+    --color-footer: #1c1c1e;
+    --color-map-base: #2c2c2e;
+    --color-map-dim: #1c1c1e;
+    --color-map-hover: #3a3a3c;
+    --color-map-stroke: #3a3a3c;
+}
+
+:root {
+    --color-map-base: #e6e6e6;
+    --color-map-dim: #f3f0f0;
+    --color-map-hover: #cccccc;
+    --color-map-stroke: #d2d2cc;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    ::selection {
+        background: #000;
+        color: #fff;
+    }
+
+    :root.dark ::selection {
+        background: #fff;
+        color: #000;
+    }
+
+    section[id],
+    nav[id] {
+        scroll-margin-top: 72px;
+    }
+
+    body {
+        line-height: 1.6;
+        text-wrap: pretty;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-ink);
+        outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+    html {
+            scroll-behavior: auto;
+        }
+
+        .map-region,
+        .btn {
+            transition: none;
+        }
+
+        .scroll-hint.is-nudging {
+            animation: none;
+        }
+
+    }
+}
+
+.scroll-hint.is-nudging {
+    animation-name: ahft-nudge;
+}
+
+@media (max-width: 767px) {
+    .scroll-hint.is-nudging {
+        animation-duration: 0.9s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in-out;
+        animation-delay: 0.2s;
+    }
+
+    .scroll-hint--delayed.is-nudging {
+        animation-delay: 0.5s;
+    }
+}
+
+@keyframes ahft-nudge {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-14px);
+    }
+    45% {
+        transform: translateX(12px);
+    }
+    60% {
+        transform: translateX(-8px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@layer components {
+    @font-face {
+        font-family: "Grato Grotesk CY";
+        src: url("/fonts/GratoGroteskCY-Regular-Desktop.otf") format("opentype");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: "Grato Grotesk CY";
+        src: url("/fonts/GratoGroteskCY-Medium-Desktop.otf") format("opentype");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: "Grato Grotesk CY";
+        src: url("/fonts/GratoGroteskCY-Bold-Desktop.otf") format("opentype");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex w-full items-center justify-center rounded-full bg-fill px-6 py-[18.5px] text-center text-[1.03rem] font-medium uppercase tracking-[0.5px] text-on-fill transition-transform duration-200 hover:opacity-85 active:scale-[0.98] md:w-auto md:px-8 md:py-[16.5px] md:text-[0.96rem];
+    }
+
+    .btn--light {
+        @apply bg-surface text-ink;
+    }
+
+    .btn--shop {
+        @apply w-auto border border-ink px-4 py-2 text-[0.85rem] no-underline;
+    }
+
+    a[aria-label="AHFT — на главную"] {
+        transition: transform 0.3s ease;
+    }
+
+    a[aria-label="AHFT — на главную"].is-hidden {
+        transform: translateY(calc(-100% - 100px));
+    }
+
+    .field {
+        @apply grid gap-2;
+    }
+
+    .field__label {
+        @apply text-[0.85rem] uppercase tracking-[0.5px] text-mute;
+    }
+
+    .field select {
+        @apply w-full cursor-pointer appearance-none rounded-xl border border-line bg-surface px-4 py-3.5 text-base text-ink transition-colors focus:border-ink;
+        font: inherit;
+    }
+
+    .form-control {
+        @apply w-full rounded-xl border border-line bg-surface px-4 py-4 text-[1.1rem] text-ink transition-colors focus:border-ink md:py-3.5 md:text-[1.03rem];
+        font-family: inherit;
+    }
+
+    .form-control::placeholder {
+        color: var(--color-mute);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    .partners-track {
+        animation: partners-slide 24s linear infinite;
+    }
+
+    .partners-track--reverse {
+        animation-direction: reverse;
+    }
+
+    @keyframes partners-slide {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(calc(-50% - 10px));
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .partners-track,
+        .partners-track--reverse {
+            animation: none;
+        }
+    }
+
+    .partners-mask {
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    }
+
+    .partners-track span,
+    .partners-track--reverse span {
+        transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .partners-track span:hover,
+    .partners-track--reverse span:hover {
+        border-color: var(--color-ink);
+    }
+
+    .map-wrap {
+        display: none;
+    }
+
+    /* Подсказка «наведите курсор на карту»: появляется по скроллу, когда
+       карта целиком в экране (JS вешает .is-visible). */
+
+    .map-region {
+        fill: var(--color-map-base);
+        stroke: var(--color-map-stroke);
+        stroke-width: 4;
+        stroke-linejoin: round;
+        transition: fill 0.15s ease;
+        cursor: pointer;
+    }
+
+    /* выделение только по округу и только через JS (.is-hover на всех path
+       округа). CSS-:hover не используется — он красил бы один регион. */
+    .map-region.is-hover {
+        fill: var(--color-map-hover);
+    }
+
+    .map-region.is-dim {
+        fill: var(--color-map-dim);
+        transition: fill 0.2s ease;
+    }
+
+    .map-tooltip {
+        @apply pointer-events-auto absolute z-5 w-max max-w-[280px] rounded-lg bg-fill px-3 py-2 text-[0.85rem] text-on-fill;
+    }
+
+    /* тултип про округ: городов и контактов до 7+ — ограничиваем высоту */
+    .map-tooltip {
+        max-height: 340px;
+        overflow-y: auto;
+    }
+
+    .map-tooltip__okrug {
+        @apply mb-1 block text-[0.7rem] uppercase tracking-[0.5px] opacity-70;
+    }
+
+    /* название контакта, у которого несколько площадок */
+    .map-tooltip__name {
+        @apply mt-2 block;
+    }
+
+    /* линейка продавцов одного города — именa через запятую в одной строке.
+       Обычный inline-поток (НЕ flex): текст-разделитель ', ' между ссылками
+       течёт вместе с текстом и при переносе НЕ отделяется от следующего
+       имени («OSHISHA, Big Smoke», а не «OSHISHA / , / Big Smoke»). */
+    .map-tooltip__sellers {
+        @apply mt-2;
+    }
+
+    .map-tooltip__sellers .map-tooltip__link,
+    .map-tooltip__sellers .map-tooltip__name,
+    .map-tooltip__sellers .map-tooltip__shop {
+        display: inline;
+        margin-top: 0;
+    }
+
+    .map-tooltip__sellers .map-tooltip__name,
+    .map-tooltip__sellers .map-tooltip__shop {
+        @apply opacity-90;
+    }
+
+    /* города контакта — сразу под его названием */
+    .map-tooltip__city {
+        @apply block text-[0.8rem] opacity-70;
+    }
+
+    .map-tooltip__link {
+        @apply mt-2 block cursor-pointer underline underline-offset-2;
+    }
+
+    /* дополнительные площадки того же контакта — компактнее основной ссылки */
+    .map-tooltip__link--alt {
+        @apply mt-1 text-[0.8rem] opacity-80;
+    }
+
+    .map-tooltip__link:hover {
+        @apply opacity-80;
+    }
+
+    .map-tooltip__shop {
+        @apply mt-2 block opacity-80;
+    }
+
+    @media (min-width: 769px) {
+        .map-wrap {
+            display: block;
+        }
+
+        /* карта нарисована перевёрнутой по Y — зеркалим, чтобы север был сверху */
+        #ru-map {
+            transform: scaleY(-1);
+        }
+    }
+
+    header nav a {
+        position: relative;
+    }
+
+    header nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -2px;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.25s ease;
+    }
+
+    header nav a:hover::after,
+    header nav a:focus-visible::after {
+        transform: scaleX(1);
+    }
+
+    header nav a.is-active::after {
+        transform: scaleX(1);
+    }
+
+    header {
+        color: var(--color-ink);
+    }
+
+    .theme-invert-mark {
+        filter: invert(1);
+    }
+
+    :root.dark #catalog img[alt="Blansh"],
+    :root.dark #catalog img[alt="Nuar"] {
+        filter: invert(1);
+    }
+
+    :root.dark footer img[alt="Blansh"],
+    :root.dark footer img[alt="Nuar"] {
+        filter: invert(1);
+    }
+
+    html {
+        scroll-padding-top: 6rem;
+    }
+
+    main {
+        margin-top: 0;
+    }
+
+    @media (min-width: 48rem) {
+        main {
+            margin-top: 100px;
+        }
+    }
+
+    /* ── film grain (premium texture) ──────────────────────────────── */
+
+    .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 160px 160px;
+    }
+
+    /* ── dark overrides ────────────────────────────────────────────── */
+
+
+}
+
+@media (min-width: 48rem) {
+    #catalog li.is-hidden {
+        display: block;
+opacity: 0.2;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+}
+
+/* ── mobile aroma popup (overlay) ──────────────────────────────── */
+
+.aroma-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.aroma-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.aroma-popup {
+    position: relative;
+    width: min(100%, 420px);
+    max-height: 80vh;
+    overflow-y: auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.2s ease;
+}
+
+.aroma-overlay.is-open .aroma-popup {
+    transform: translateY(0) scale(1);
+}
+
+.aroma-popup__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--color-mute);
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.aroma-popup__close::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M1 1l12 12M13 1L1 13' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M1 1l12 12M13 1L1 13' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.aroma-popup__close:hover {
+    color: var(--color-ink);
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+}
+
+.aroma-popup__drop {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #b3b3b3;
+}
+
+.aroma-popup__name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--color-ink);
+}
+
+.aroma-popup__desc {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-mute);
+}
+
+/* Тема-тогл в подвале: солнце (светлая тема) / луна (тёмная тема) */
+.theme-toggle__sun {
+    display: block;
+}
+.theme-toggle__moon {
+    display: none;
+}
+:root.dark .theme-toggle__sun {
+    display: none;
+}
+:root.dark .theme-toggle__moon {
+    display: block;
+}
