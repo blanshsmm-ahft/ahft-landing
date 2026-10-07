@@ -52,7 +52,7 @@
 
     section[id],
     nav[id] {
-        scroll-margin-top: 72px;
+        scroll-margin-top: 100px;
     }
 
     body {
@@ -375,10 +375,6 @@
     :root.dark footer img[alt="Blansh"],
     :root.dark footer img[alt="Nuar"] {
         filter: invert(1);
-    }
-
-    html {
-        scroll-padding-top: 6rem;
     }
 
     main {
