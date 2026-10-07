@@ -414,7 +414,8 @@
   grid формы по-прежнему 3 колонки.
   ОТПРАВКА ФОРМЫ НА ПОЧТУ (по просьбе «настрой отправку форму на почту
   r.gardanov@ahftobacco.ru», выбор сервиса — FormSubmit.co):
-  — у `.contact-form` добавлены `action="https://formsubmit.co/r.gardanov@ahftobacco.ru"`
+  — у `.contact-form` добавлены `action="https://formsubmit.co/sales@ahftobacco.ru"`
+    (ПО ПРОСЬБЕ СМЕНИЛСЯ С r.gardanov@ahftobacco.ru НА sales@ahftobacco.ru)
     и `method="POST"`; у ПОЛЕЙ добавлены `name` (name/phone/email/company/
     geography — без них FormSubmit не получает данные); скрытые инпуты
     `_subject` (тема письма «Заявка „Партнёрам“ с сайта AHFT»), `_captcha=false`
@@ -461,10 +462,10 @@
     работает поверх. Проверено Playwright: пусто/1/2/4 поля → disabled
     (opacity 0.5), 5 полей → enabled, убрали поле → disabled, после отправки
     → disabled, POST один;
-  — ВАЖНО: ПЕРВАЯ заявка в FormSubmit отправляет на r.gardanov@ahftobacco.ru
+  — ВАЖНО: ПЕРВАЯ заявка в FormSubmit отправляет на sales@ahftobacco.ru
     письмо-активацию — надо один раз кликнуть ссылку в нём, дальше почта идёт
     в обычном режиме. Проверено Playwright-роутом: POST уходит на
-    `formsubmit.co/r.gardanov@ahftobacco.ru` с `Accept: application/json` и всеми
+    `formsubmit.co/sales@ahftobacco.ru` с `Accept: application/json` и всеми
     полями + `_subject`.
 - Заголовок `#join` — длинный (4 строки на десктопе, 6 на 769px), поэтому у
   него `leading-[1.25]`, а НЕ `leading-[1.1]` как у остальных секционных h2.
@@ -629,6 +630,27 @@
   под телефоном) считается исключением как `mt-1` в существующей типографике.
   Мобилка — вертикальный стек всех колонок (допустимо: редизайн подвала по
   явной просьбе), без горизонтального overflow (390/360 пусто).
+
+## Деплой (GitHub Pages)
+
+- Репозиторий: https://github.com/blanshsmm-ahft/ahft-landing (public),
+  живой сайт: https://blanshsmm-ahft.github.io/ahft-landing/.
+- Деплой АВТОМАТИЧЕСКИЙ: push в `main` → GitHub Actions
+  (`.github/workflows/deploy.yml`: npm ci → npm run build → upload dist →
+  deploy-pages). Ручной запуск — Actions → Deploy to GitHub Pages → Run.
+  Pages включён (Source: GitHub Actions).
+- `vite.config.ts` содержит `base: './'` (относительные пути ассетов) —
+  сайт работает из подпапки GitHub Pages; `src/map.ts` грузит `regions.json`
+  отн. путём (`'regions.json'`, НЕ `'/regions.json'` — сломается на Pages).
+  Не менять на абсолютные пути.
+- Git: локальный конфиг `user.name=blanshsmm-ahft`,
+  `user.email=blanshsmm-ahft@users.noreply.github.com`; авторизация —
+  `gh` (keyring, scopes gist/read:org/repo/workflow), credential helper
+  настроен через `gh auth setup-git` (osxkeychain + gh). Для пуша
+  workflow-файлов НУЖЕН scope `workflow` (его добавляли через
+  `gh auth refresh -s workflow` — device flow, код вводит пользователь).
+- `.gitignore`: node_modules, dist, .DS_Store, .netlify, .opencode.
+  В репозитории 56 файлов (исходники + AGENTS/WORKLOG/design/refs).
 
 ## Проверки
 
