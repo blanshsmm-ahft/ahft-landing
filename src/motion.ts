@@ -3,31 +3,15 @@ export function initMotion(): void {
 
     const hideables = document.querySelectorAll<HTMLElement>('a[aria-label="AHFT — на главную"]');
     if (hideables.length && !prefersReduced) {
-        let lastY = window.scrollY;
-        let acc = 0;
+        const HIDE_AFTER = 25;
         const setHidden = (hidden: boolean) => {
             hideables.forEach((el) => el.classList.toggle('is-hidden', hidden));
         };
         const onScroll = () => {
-            const y = window.scrollY;
-            const nearBottom = document.documentElement.scrollHeight - y - window.innerHeight < 160;
-            if (y < 96 || nearBottom) {
-                setHidden(false);
-                acc = 0;
-            } else {
-                const delta = y - lastY;
-                if (delta !== 0) {
-                    acc += delta;
-                    if (acc > 4) {
-                        setHidden(true);
-                        acc = 0;
-                    } else if (acc < -4) {
-                        setHidden(false);
-                        acc = 0;
-                    }
-                }
-            }
-            lastY = y;
+            // Показываем только в самом начале страницы. При скролле вниз
+            // прячем после 20–30px; при скролле вверх НЕ показываем,
+            // пока не вернёмся на самый top.
+            setHidden(window.scrollY >= HIDE_AFTER);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
