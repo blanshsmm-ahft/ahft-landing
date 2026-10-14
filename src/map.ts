@@ -307,8 +307,8 @@ function wireMap(
             tooltip.appendChild(tooltipLine('map-tooltip__shop', name));
             const urlSet = new Set<string>();
             for (const urls of cityUrls.values()) for (const u of urls) if (u) urlSet.add(u);
-            if (urlSet.size === 1 && citiesList.length > 1) {
-                const u = [...urlSet][0];
+            if (citiesList.length > 1 && distinctUrls.size === 1) {
+                const u = [...distinctUrls][0];
                 const citiesText = citiesList.join(', ');
                 const row = document.createElement('div');
                 row.className = 'map-tooltip__sellers';
