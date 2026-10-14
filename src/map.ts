@@ -327,10 +327,10 @@ function wireMap(
                     tooltip.appendChild(sub);
                 } else {
                     for (const u of urls) {
-                        const row=document.createElement('div');
-                        row.className='map-tooltip__sellers';
-                        row.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
-                        tooltip.appendChild(row);
+                        const r=document.createElement('div');
+                        r.className='map-tooltip__sellers';
+                        r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
+                        tooltip.appendChild(r);
                     }
                 }
             }
