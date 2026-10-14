@@ -335,14 +335,6 @@ function wireMap(
     }
 
     // Площадка контакта в читаемом виде: `vk.com/hookahmarketsamara`.
-    function platformLabel(url: string): string {
-        return url
-            .replace(/^https?:\/\//, '')
-            .replace(/^www\./, '')
-            .replace(/[?#].*$/, '')
-            .replace(/\/$/, '');
-    }
-
     function updateColors(): void {
         const okrugActive = okrugSelect.value;
         paths.forEach(p => {
