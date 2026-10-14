@@ -332,6 +332,7 @@ function wireMap(
                         r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
                         tooltip.appendChild(r);
                     }
+                    // don't add platform labels below when city is clickable
                 }
             }
         }
