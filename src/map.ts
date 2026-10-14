@@ -326,24 +326,12 @@ function wireMap(
                     sub.appendChild(tooltipLink(u, platformLabel(u), 'map-tooltip__link map-tooltip__link--alt'));
                     tooltip.appendChild(sub);
                 } else {
-                    const row = document.createElement('div');
-                    row.className = 'map-tooltip__sellers';
-                    const links: HTMLElement[] = [];
-                    for (const u of urls) links.push(tooltipLink(u, city, 'map-tooltip__link'));
-                    // для города с несколькими ссылками — дублировать город не нужно, показываем города в виде ссылок выше/или просто города? 
-                    // пользователь хочет: город кликабелен по клику ссылка на контакт
-                    // если несколько ссылок у одного города — показываем КАЖДЫЙ ГОРОД как ссылку на свой контакт? Но город один
-                    // правильнее: для каждого контакта выводим город как ссылку
-                    for (let i=0;i<urls.length;i++) {
-                        const r2=document.createElement('div');
-                        r2.className='map-tooltip__sellers';
-                        r2.appendChild(tooltipLink(urls[i], city, 'map-tooltip__link'));
-                        tooltip.appendChild(r2);
-                        const s2=document.createElement('div');
-                        s2.className='map-tooltip__sellers';
-                        s2.appendChild(tooltipLink(urls[i], platformLabel(urls[i]), 'map-tooltip__link map-tooltip__link--alt'));
-                        tooltip.appendChild(s2);
-                    }
+                    const row=document.createElement('div');
+                    row.className='map-tooltip__sellers';
+                    const linkEls: HTMLElement[]=[];
+                    for (const u of urls) linkEls.push(tooltipLink(u, city, 'map-tooltip__link'));
+                    linkEls.forEach((el,i)=>{ if(i) row.appendChild(document.createTextNode(', ')); row.appendChild(el); });
+                    tooltip.appendChild(row);
                 }
             }
         }
