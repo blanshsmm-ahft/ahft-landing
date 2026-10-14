@@ -317,21 +317,33 @@ function wireMap(
                 const row = document.createElement('div');
                 row.className = 'map-tooltip__sellers';
                 if (urls.length === 1) {
-                    row.appendChild(tooltipLine('map-tooltip__city', city));
+                    const u = urls[0];
+                    const link = tooltipLink(u, city, 'map-tooltip__link');
+                    row.appendChild(link);
                     tooltip.appendChild(row);
                     const sub = document.createElement('div');
                     sub.className = 'map-tooltip__sellers';
-                    sub.appendChild(tooltipLink(urls[0], urls[0].replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/[?#].*$/,'').replace(/\/$/,'') , 'map-tooltip__link map-tooltip__link--alt'));
+                    sub.appendChild(tooltipLink(u, platformLabel(u), 'map-tooltip__link map-tooltip__link--alt'));
                     tooltip.appendChild(sub);
                 } else {
-                    row.appendChild(tooltipLine('map-tooltip__city', city));
-                    tooltip.appendChild(row);
-                    const sub = document.createElement('div');
-                    sub.className = 'map-tooltip__sellers';
+                    const row = document.createElement('div');
+                    row.className = 'map-tooltip__sellers';
                     const links: HTMLElement[] = [];
-                    for (const u of urls) links.push(tooltipLink(u, platformLabel(u), 'map-tooltip__link map-tooltip__link--alt'));
-                    links.forEach((el,i)=>{ if(i) sub.appendChild(document.createTextNode(', ')); sub.appendChild(el); });
-                    tooltip.appendChild(sub);
+                    for (const u of urls) links.push(tooltipLink(u, city, 'map-tooltip__link'));
+                    // для города с несколькими ссылками — дублировать город не нужно, показываем города в виде ссылок выше/или просто города? 
+                    // пользователь хочет: город кликабелен по клику ссылка на контакт
+                    // если несколько ссылок у одного города — показываем КАЖДЫЙ ГОРОД как ссылку на свой контакт? Но город один
+                    // правильнее: для каждого контакта выводим город как ссылку
+                    for (let i=0;i<urls.length;i++) {
+                        const r2=document.createElement('div');
+                        r2.className='map-tooltip__sellers';
+                        r2.appendChild(tooltipLink(urls[i], city, 'map-tooltip__link'));
+                        tooltip.appendChild(r2);
+                        const s2=document.createElement('div');
+                        s2.className='map-tooltip__sellers';
+                        s2.appendChild(tooltipLink(urls[i], platformLabel(urls[i]), 'map-tooltip__link map-tooltip__link--alt'));
+                        tooltip.appendChild(s2);
+                    }
                 }
             }
         }
