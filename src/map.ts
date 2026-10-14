@@ -326,12 +326,12 @@ function wireMap(
                     sub.appendChild(tooltipLink(u, platformLabel(u), 'map-tooltip__link map-tooltip__link--alt'));
                     tooltip.appendChild(sub);
                 } else {
-                    const row=document.createElement('div');
-                    row.className='map-tooltip__sellers';
-                    const linkEls: HTMLElement[]=[];
-                    for (const u of urls) linkEls.push(tooltipLink(u, city, 'map-tooltip__link'));
-                    linkEls.forEach((el,i)=>{ if(i) row.appendChild(document.createTextNode(', ')); row.appendChild(el); });
-                    tooltip.appendChild(row);
+                    for (const u of urls) {
+                        const row=document.createElement('div');
+                        row.className='map-tooltip__sellers';
+                        row.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
+                        tooltip.appendChild(row);
+                    }
                 }
             }
         }
