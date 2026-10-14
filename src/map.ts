@@ -305,8 +305,7 @@ function wireMap(
             for (const urls of cityUrls.values()) for (const u of urls) if (u) distinctUrls.add(u);
 
             tooltip.appendChild(tooltipLine('map-tooltip__shop', name));
-            const urlSet = new Set<string>();
-            for (const urls of cityUrls.values()) for (const u of urls) if (u) urlSet.add(u);
+            for (const urls of cityUrls.values()) for (const u of urls) if (u) {} // noop
             if (citiesList.length > 1 && distinctUrls.size === 1) {
                 const u = [...distinctUrls][0];
                 const citiesText = citiesList.join(', ');
