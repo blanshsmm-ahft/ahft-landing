@@ -328,9 +328,10 @@ function wireMap(
                 } else {
                     const row=document.createElement('div');
                     row.className='map-tooltip__sellers';
-                    const linkEls: HTMLElement[]=[];
-                    for (const u of urls) linkEls.push(tooltipLink(u, city, 'map-tooltip__link'));
-                    linkEls.forEach((el,i)=>{ if(i) row.appendChild(document.createTextNode(', ')); row.appendChild(el); });
+                    for (let i=0;i<urls.length;i++) {
+                        if(i) row.appendChild(document.createTextNode(', '));
+                        row.appendChild(tooltipLink(urls[i], city, 'map-tooltip__link'));
+                    }
                     tooltip.appendChild(row);
                 }
             }
