@@ -257,7 +257,9 @@ function wireMap(
         tooltip.appendChild(tooltipLine('map-tooltip__okrug', `${okrug} федеральный округ`));
 
         const byCity = new Map<string, Contact[]>();
-        for (const contact of okrugInfo.get(okrug) ?? []) {
+        const contactsInOkrug = okrugInfo.get(okrug) ?? [];
+        const sellerNames = [...new Set(contactsInOkrug.map((c) => c.name))];
+        for (const contact of contactsInOkrug) {
             for (const city of contact.citiesByOkrug.get(okrug) ?? []) {
                 const list = byCity.get(city);
                 if (list) list.push(contact);
@@ -269,57 +271,70 @@ function wireMap(
         // города через запятую («Поставь Угли» → Новосибирск, Томск, …).
         // Если город общий для нескольких продавцов — продавцы через запятую
         // в одной строке, ниже город («Москва» → OSHISHA, Big Smoke).
-        const single = new Map<Contact, string[]>();
+        const singleByName = new Map<string, Array<{ city: string; url: string }>>();
         const shared = new Map<string, Contact[]>();
         for (const [city, list] of byCity) {
             if (list.length === 1) {
-                const contact = list[0];
-                const arr = single.get(contact);
-                if (arr) arr.push(city);
-                else single.set(contact, [city]);
+                const c = list[0];
+                const url = c.urls[0] ?? '';
+                const arr = singleByName.get(c.name);
+                if (arr) arr.push({ city, url });
+                else singleByName.set(c.name, [{ city, url }]);
             } else {
                 shared.set(city, list);
             }
         }
 
-        for (const contact of okrugInfo.get(okrug) ?? []) {
-            const cities = single.get(contact);
-            if (!cities) continue;
-            tooltip.appendChild(sellerRow([contact]));
-            tooltip.appendChild(tooltipLine('map-tooltip__city', cities.join(', ')));
-        }
-        for (const [city, list] of shared) {
-            tooltip.appendChild(sellerRow(list));
-            tooltip.appendChild(tooltipLine('map-tooltip__city', city));
-        }
-    }
-
-    function sellerRow(contacts: Contact[]): HTMLDivElement {
-        const row = document.createElement('div');
-        row.className = 'map-tooltip__sellers';
-
-        const sellers: HTMLElement[] = [];
-        for (const contact of contacts) {
-            if (contact.urls.length === 1) {
-                // Одна площадка — сама ссылка и есть название контакта.
-                sellers.push(tooltipLink(contact.urls[0], contact.name, 'map-tooltip__link'));
-            } else if (contact.urls.length > 1) {
-                // Несколько площадок у одного продавца: имя как подпись,
-                // площадки — следом в той же строке через запятую.
-                sellers.push(tooltipLine('map-tooltip__name', contact.name));
-                for (const url of contact.urls) {
-                    sellers.push(tooltipLink(url, platformLabel(url), 'map-tooltip__link map-tooltip__link--alt'));
+        for (const name of sellerNames) {
+            const contacts = contactsInOkrug.filter(c => c.name === name);
+            const cityUrls = new Map<string, string[]>();
+            for (const c of contacts) {
+                const cities = c.citiesByOkrug.get(okrug) ?? [];
+                for (const city of cities) {
+                    const arr = cityUrls.get(city);
+                    if (arr) {
+                        for (const u of c.urls) if (u && !arr.includes(u)) arr.push(u);
+                    } else {
+                        cityUrls.set(city, [...c.urls.filter(Boolean)]);
+                    }
                 }
-            } else {
-                sellers.push(tooltipLine('map-tooltip__shop', contact.name));
+            }
+
+            const citiesList = [...cityUrls.keys()].sort((a,b)=>a.localeCompare(b,'ru'));
+            const distinctUrls = new Set<string>();
+            for (const urls of cityUrls.values()) for (const u of urls) if (u) distinctUrls.add(u);
+
+            tooltip.appendChild(tooltipLine('map-tooltip__shop', name));
+            for (const city of citiesList) {
+                const urls = cityUrls.get(city) ?? [];
+                if (urls.length === 0) {
+                    const row = document.createElement('div');
+                    row.className = 'map-tooltip__sellers';
+                    row.appendChild(tooltipLine('map-tooltip__city', city));
+                    tooltip.appendChild(row);
+                    continue;
+                }
+                const row = document.createElement('div');
+                row.className = 'map-tooltip__sellers';
+                if (urls.length === 1) {
+                    row.appendChild(tooltipLine('map-tooltip__city', city));
+                    tooltip.appendChild(row);
+                    const sub = document.createElement('div');
+                    sub.className = 'map-tooltip__sellers';
+                    sub.appendChild(tooltipLink(urls[0], urls[0].replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/[?#].*$/,'').replace(/\/$/,'') , 'map-tooltip__link map-tooltip__link--alt'));
+                    tooltip.appendChild(sub);
+                } else {
+                    row.appendChild(tooltipLine('map-tooltip__city', city));
+                    tooltip.appendChild(row);
+                    const sub = document.createElement('div');
+                    sub.className = 'map-tooltip__sellers';
+                    const links: HTMLElement[] = [];
+                    for (const u of urls) links.push(tooltipLink(u, platformLabel(u), 'map-tooltip__link map-tooltip__link--alt'));
+                    links.forEach((el,i)=>{ if(i) sub.appendChild(document.createTextNode(', ')); sub.appendChild(el); });
+                    tooltip.appendChild(sub);
+                }
             }
         }
-        sellers.forEach((el, i) => {
-            if (i) row.appendChild(document.createTextNode(', '));
-            row.appendChild(el);
-        });
-
-        return row;
     }
 
     function tooltipLink(url: string, text: string, cls: string): HTMLAnchorElement {
