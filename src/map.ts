@@ -314,24 +314,11 @@ function wireMap(
                     tooltip.appendChild(row);
                     continue;
                 }
-                const row = document.createElement('div');
-                row.className = 'map-tooltip__sellers';
-                if (urls.length === 1) {
-                    const u = urls[0];
-                    const link = tooltipLink(u, city, 'map-tooltip__link');
-                    row.appendChild(link);
-                    tooltip.appendChild(row);
-                    const sub = document.createElement('div');
-                    sub.className = 'map-tooltip__sellers';
-                    sub.appendChild(tooltipLink(u, platformLabel(u), 'map-tooltip__link map-tooltip__link--alt'));
-                    tooltip.appendChild(sub);
-                } else {
-                    for (const u of urls) {
-                        const r=document.createElement('div');
-                        r.className='map-tooltip__sellers';
-                        r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
-                        tooltip.appendChild(r);
-                    }
+                for (const u of urls) {
+                    const r=document.createElement('div');
+                    r.className='map-tooltip__sellers';
+                    r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
+                    tooltip.appendChild(r);
                 }
             }
         }
