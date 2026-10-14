@@ -77,29 +77,27 @@ function wireMap(
         // Один продавец может иметь несколько площадок («Hookah Maket» — три
         // разных URL), поэтому URL'ы собираются в список, а не хранятся по одному.
         urls: string[];
-        // Города ГРУППИРУЮТСЯ ПО ОКРУГУ (округ → города ИМЕННО этого округа),
-        // а сам контакт — ГЛОБАЛЬНЫЙ по ИМЕНИ на всю страну (по просьбе «Nuahule
-        // Store одна ссылка с контактами на все регионы»): один продавец в разных
-        // округах сводится в ОДИН `Contact`, чтобы у него была ОДНА ссылка
-        // (пустой `url` площадкой не считается — ссылка из любого региона
-        // распространяется на весь контакт, поэтому Nuahule Store показывается
-        // ссылкой `nua-store.ru` и на Красноярск). НО города в тултипе округа —
-        // ТОЛЬКО из этого округа (по просьбе «в дальневосточном и сибирском
-        // округах дублируются города: Новосибирск… Барнаул»): в Сибирском
-        // у «Поставь Угли» Новосибирск, Томск, Горно-Алтайск, Абакан, Кемерово,
-        // а в Дальневосточном — только Барнаул (ru-bu в данных приписан
-        // к Дальневосточному, города глобально НЕ перечисляются).
+        // Города ГРУППИРУЮТСЯ ПО ОКРУГУ. Контакт = ИМЯ + ССЫЛКА: один и тот же
+        // продавец с разными площадками в разных регионах — это РАЗНЫЕ контакты,
+        // поэтому каждый округ показывает только свою ссылку (Дистрибутор:
+        // Сибирский — t.me/Sundukooov, Уральский — t.me/CamDark72; ДОКА/XB Store —
+        // по ссылке на город; Nuahule Store: Иваново/Владимир — nua-store.ru,
+        // Красноярск — nuahulestore24.orgs.biz). Контакты с ПУСТОЙ ссылкой
+        // группируются по имени.
         citiesByOkrug: Map<string, string[]>;
     }
 
-    const contactsByName = new Map<string, Contact>();
+    // Контакт уникален по (имя + ссылка). Пустая ссылка группирует по имени.
+    const contactsByKey = new Map<string, Contact>();
+    const keyOf = (shop: { name: string; url?: string }) => `${shop.name}\u0000${shop.url ?? ''}`;
     for (const r of regions) {
         if (!r.sales) continue;
         for (const shop of r.shops ?? []) {
-            let contact = contactsByName.get(shop.name);
+            const key = keyOf(shop);
+            let contact = contactsByKey.get(key);
             if (!contact) {
                 contact = { name: shop.name, urls: [], citiesByOkrug: new Map() };
-                contactsByName.set(shop.name, contact);
+                contactsByKey.set(key, contact);
             }
             if (shop.url && !contact.urls.includes(shop.url)) contact.urls.push(shop.url);
             const cities = contact.citiesByOkrug.get(r.okrug);
@@ -114,7 +112,7 @@ function wireMap(
     }
 
     const okrugInfo = new Map<string, Contact[]>();
-    for (const contact of contactsByName.values()) {
+    for (const contact of contactsByKey.values()) {
         for (const okrug of contact.citiesByOkrug.keys()) {
             const list = okrugInfo.get(okrug);
             if (list) list.push(contact);
