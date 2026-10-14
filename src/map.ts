@@ -305,20 +305,32 @@ function wireMap(
             for (const urls of cityUrls.values()) for (const u of urls) if (u) distinctUrls.add(u);
 
             tooltip.appendChild(tooltipLine('map-tooltip__shop', name));
-            for (const city of citiesList) {
-                const urls = cityUrls.get(city) ?? [];
-                if (urls.length === 0) {
-                    const row = document.createElement('div');
-                    row.className = 'map-tooltip__sellers';
-                    row.appendChild(tooltipLine('map-tooltip__city', city));
-                    tooltip.appendChild(row);
-                    continue;
-                }
-                for (const u of urls) {
-                    const r=document.createElement('div');
-                    r.className='map-tooltip__sellers';
-                    r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
-                    tooltip.appendChild(r);
+            const urlSet = new Set<string>();
+            for (const urls of cityUrls.values()) for (const u of urls) if (u) urlSet.add(u);
+            if (urlSet.size === 1 && citiesList.length > 1) {
+                const u = [...urlSet][0];
+                const citiesText = citiesList.join(', ');
+                const row = document.createElement('div');
+                row.className = 'map-tooltip__sellers';
+                row.appendChild(tooltipLink(u, citiesText, 'map-tooltip__link'));
+                tooltip.appendChild(row);
+                continue;
+            } else {
+                for (const city of citiesList) {
+                    const urls = cityUrls.get(city) ?? [];
+                    if (urls.length === 0) {
+                        const row = document.createElement('div');
+                        row.className = 'map-tooltip__sellers';
+                        row.appendChild(tooltipLine('map-tooltip__city', city));
+                        tooltip.appendChild(row);
+                        continue;
+                    }
+                    for (const u of urls) {
+                        const r=document.createElement('div');
+                        r.className='map-tooltip__sellers';
+                        r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
+                        tooltip.appendChild(r);
+                    }
                 }
             }
         }
