@@ -87,11 +87,17 @@
     "shops": [
       {
         "name": "ДОКА и магазины XB Store",
-        "url": "https://xb-store.ru/contacts/stores/"
+        "url": "https://xb-store.ru/contacts/stores/",
+        "cities": [
+          "Хабаровск"
+        ]
       },
       {
         "name": "ДОКА и магазины XB Store",
-        "url": "https://kms.xb-store.ru/contacts/stores/"
+        "url": "https://kms.xb-store.ru/contacts/stores/",
+        "cities": [
+          "Комсомольск-на-Амуре"
+        ]
       }
     ]
   },

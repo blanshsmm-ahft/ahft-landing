@@ -6,5 +6,5 @@ export interface Region {
     cy: number;
     sales?: boolean;
     cities?: string[];
-    shops?: { name: string; url: string }[];
+    shops?: { name: string; url: string; cities?: string[] }[];
 }

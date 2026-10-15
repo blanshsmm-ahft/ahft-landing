@@ -262,7 +262,7 @@
     }
 
     .map-tooltip {
-        @apply pointer-events-auto absolute z-5 w-max max-w-[280px] rounded-lg bg-fill px-3 py-2 text-[0.85rem] text-on-fill;
+        @apply pointer-events-auto absolute z-5 w-max max-w-[280px] rounded-lg bg-fill px-5 py-4 text-[0.85rem] text-on-fill;
     }
 
     /* тултип про округ: городов и контактов до 7+ — ограничиваем высоту */
@@ -290,9 +290,11 @@
 
     .map-tooltip__sellers .map-tooltip__link,
     .map-tooltip__sellers .map-tooltip__name,
+    .map-tooltip__sellers .map-tooltip__city,
     .map-tooltip__sellers .map-tooltip__shop {
         display: inline;
         margin-top: 0;
+        white-space: nowrap;
     }
 
     .map-tooltip__sellers .map-tooltip__name,
@@ -300,9 +302,10 @@
         @apply opacity-90;
     }
 
-    /* города контакта — сразу под его названием */
+    /* город-подпись, когда в городе несколько магазинов: город идёт текстом,
+       а ссылками выводятся магазины («Москва: OSHISHA, Big Smoke») */
     .map-tooltip__city {
-        @apply block text-[0.8rem] opacity-70;
+        @apply opacity-70;
     }
 
     .map-tooltip__link {
@@ -320,6 +323,47 @@
 
     .map-tooltip__shop {
         @apply mt-2 inline-block rounded-full border border-line px-3 py-1 text-center text-sm font-medium opacity-80;
+    }
+
+    /* Названия магазинов в тултипе — одна бегущая строка (анимация как в
+       разделе «Наши партнёры»: бесшовный цикл, маска по краям, пауза при
+       наведении, отключение при prefers-reduced-motion). */
+    .map-tooltip__marquee {
+        @apply mt-6 overflow-hidden;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    }
+
+    .map-tooltip__marquee-track {
+        display: flex;
+        width: max-content;
+        gap: 8px;
+        animation: map-marquee 18s linear infinite;
+    }
+
+    .map-tooltip__marquee:hover .map-tooltip__marquee-track {
+        animation-play-state: paused;
+    }
+
+    .map-tooltip__marquee-track .map-tooltip__shop {
+        margin-top: 0;
+        white-space: nowrap;
+    }
+
+    @keyframes map-marquee {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(calc(-50% - 4px));
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .map-tooltip__marquee-track {
+            animation: none;
+        }
     }
 
     @media (min-width: 769px) {

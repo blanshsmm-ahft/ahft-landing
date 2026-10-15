@@ -100,11 +100,16 @@ function wireMap(
                 contactsByKey.set(key, contact);
             }
             if (shop.url && !contact.urls.includes(shop.url)) contact.urls.push(shop.url);
+            // Города можно задать на уровне конкретной ссылки (`shop.cities`) —
+            // когда в одном регионе продавец представлен разными ссылками по
+            // разным городам (Хабаровск → xb-store.ru, Комсомольск-на-Амуре →
+            // kms.xb-store.ru). Иначе берём города региона.
+            const shopCities = shop.cities ?? r.cities ?? [];
             const cities = contact.citiesByOkrug.get(r.okrug);
             if (!cities) {
-                contact.citiesByOkrug.set(r.okrug, [...(r.cities ?? [])]);
+                contact.citiesByOkrug.set(r.okrug, [...shopCities]);
             } else {
-                for (const c of r.cities ?? []) {
+                for (const c of shopCities) {
                     if (!cities.includes(c)) cities.push(c);
                 }
             }
@@ -247,91 +252,86 @@ function wireMap(
         return el;
     }
 
-    // Тултип про ОКРУГ, продавцы сгруппированы ПО ГОРОДУ: если в одном городе
-    // несколько продавцов («Москва» — OSHISHA и Big Smoke), их имена выводятся
-    // через запятую в одной строке, ниже — город (по просьбе «пиши продавцов
-    // через запятую если представлены в одном городе»).
+    // Тултип про ОКРУГ. Сверху — список городов округа, каждый город —
+    // отдельная гиперссылка строго по тексту города (запятые и пробелы — вне
+    // ссылок). Снизу — одна бегущая строка с названиями магазинов (анимация
+    // как в разделе «Наши партнёры», с паузой при наведении).
     function renderTooltip(okrug: string): void {
         tooltip.replaceChildren();
 
         tooltip.appendChild(tooltipLine('map-tooltip__okrug', `${okrug} федеральный округ`));
 
-        const byCity = new Map<string, Contact[]>();
         const contactsInOkrug = okrugInfo.get(okrug) ?? [];
-        const sellerNames = [...new Set(contactsInOkrug.map((c) => c.name))];
-        for (const contact of contactsInOkrug) {
-            for (const city of contact.citiesByOkrug.get(okrug) ?? []) {
-                const list = byCity.get(city);
-                if (list) list.push(contact);
-                else byCity.set(city, [contact]);
+
+        // Город → список его магазинов в этом округе. Город выводится ОДИН раз:
+        // один магазин — сам город является ссылкой; несколько магазинов
+        // (Москва: OSHISHA, Big Smoke, Panda Smoke) — город идёт текстом, а
+        // магазины перечисляются отдельными ссылками. Дублей городов нет.
+        const cityStores = new Map<string, Array<{ name: string; url: string | null }>>();
+        const shopNames: string[] = [];
+        for (const c of contactsInOkrug) {
+            if (!shopNames.includes(c.name)) shopNames.push(c.name);
+            const urls = c.urls.filter(Boolean);
+            for (const city of c.citiesByOkrug.get(okrug) ?? []) {
+                let stores = cityStores.get(city);
+                if (!stores) {
+                    stores = [];
+                    cityStores.set(city, stores);
+                }
+                const list = stores;
+                const add = (url: string | null): void => {
+                    if (!list.some(s => s.name === c.name && s.url === url)) list.push({ name: c.name, url });
+                };
+                if (urls.length === 0) add(null);
+                else urls.forEach(add);
             }
         }
 
-        // Один продавец в нескольких городах — имя выводится ОДИН раз, ниже
-        // города через запятую («Поставь Угли» → Новосибирск, Томск, …).
-        // Если город общий для нескольких продавцов — продавцы через запятую
-        // в одной строке, ниже город («Москва» → OSHISHA, Big Smoke).
-        const singleByName = new Map<string, Array<{ city: string; url: string }>>();
-        const shared = new Map<string, Contact[]>();
-        for (const [city, list] of byCity) {
-            if (list.length === 1) {
-                const c = list[0];
-                const url = c.urls[0] ?? '';
-                const arr = singleByName.get(c.name);
-                if (arr) arr.push({ city, url });
-                else singleByName.set(c.name, [{ city, url }]);
-            } else {
-                shared.set(city, list);
-            }
-        }
+        // Сначала города с одним магазином (по алфавиту), затем города с
+        // несколькими магазинами (тоже по алфавиту) — они идут в конце списка.
+        const citiesList = [...cityStores.keys()].sort((a, b) => {
+            const aMulti = (cityStores.get(a)?.length ?? 0) > 1;
+            const bMulti = (cityStores.get(b)?.length ?? 0) > 1;
+            if (aMulti !== bMulti) return aMulti ? 1 : -1;
+            return a.localeCompare(b, 'ru');
+        });
 
-        for (const name of sellerNames) {
-            const contacts = contactsInOkrug.filter(c => c.name === name);
-            const cityUrls = new Map<string, string[]>();
-            for (const c of contacts) {
-                const cities = c.citiesByOkrug.get(okrug) ?? [];
-                for (const city of cities) {
-                    const arr = cityUrls.get(city);
-                    if (arr) {
-                        for (const u of c.urls) if (u && !arr.includes(u)) arr.push(u);
-                    } else {
-                        cityUrls.set(city, [...c.urls.filter(Boolean)]);
-                    }
+        const row = document.createElement('div');
+        row.className = 'map-tooltip__sellers';
+        citiesList.forEach((city, i) => {
+            if (i > 0) row.appendChild(document.createTextNode(', '));
+            const stores = cityStores.get(city) ?? [];
+            if (stores.length === 1) {
+                const s = stores[0];
+                if (s.url) row.appendChild(tooltipLink(s.url, city, 'map-tooltip__link'));
+                else row.appendChild(tooltipLine('map-tooltip__city', city));
+            } else {
+                // город один раз, затем магазины-ссылки: «Москва: OSHISHA, Big Smoke»
+                row.appendChild(tooltipLine('map-tooltip__city', `${city}:`));
+                stores.forEach((s, j) => {
+                    row.appendChild(document.createTextNode(j === 0 ? ' ' : ', '));
+                    if (s.url) row.appendChild(tooltipLink(s.url, s.name, 'map-tooltip__link'));
+                    else row.appendChild(tooltipLine('map-tooltip__shop', s.name));
+                });
+            }
+        });
+        tooltip.appendChild(row);
+
+        // Названия магазинов — бегущей строкой. Контент дублируется 4 раза,
+        // чтобы строка всегда перекрывала ширину тултипа и прокрутка была
+        // бесшовной (сдвиг на -50% минус половина gap — как у «Наши партнёры»).
+        if (shopNames.length) {
+            const marquee = document.createElement('div');
+            marquee.className = 'map-tooltip__marquee';
+            const track = document.createElement('div');
+            track.className = 'map-tooltip__marquee-track';
+            for (let pass = 0; pass < 4; pass++) {
+                for (const name of shopNames) {
+                    track.appendChild(tooltipLine('map-tooltip__shop', name));
                 }
             }
-
-            const citiesList = [...cityUrls.keys()].sort((a,b)=>a.localeCompare(b,'ru'));
-            const distinctUrls = new Set<string>();
-            for (const urls of cityUrls.values()) for (const u of urls) if (u) distinctUrls.add(u);
-
-            tooltip.appendChild(tooltipLine('map-tooltip__shop', name));
-            for (const urls of cityUrls.values()) for (const u of urls) if (u) {} // noop
-            if (citiesList.length > 1 && distinctUrls.size >= 1) {
-                const u = [...distinctUrls][0];
-                const citiesText = citiesList.join(', ');
-                const row = document.createElement('div');
-                row.className = 'map-tooltip__sellers';
-                row.appendChild(tooltipLink(u, citiesText, 'map-tooltip__link'));
-                tooltip.appendChild(row);
-                continue;
-            } else {
-                for (const city of citiesList) {
-                    const urls = cityUrls.get(city) ?? [];
-                    if (urls.length === 0) {
-                        const row = document.createElement('div');
-                        row.className = 'map-tooltip__sellers';
-                        row.appendChild(tooltipLine('map-tooltip__city', city));
-                        tooltip.appendChild(row);
-                        continue;
-                    }
-                    for (const u of urls) {
-                        const r=document.createElement('div');
-                        r.className='map-tooltip__sellers';
-                        r.appendChild(tooltipLink(u, city, 'map-tooltip__link'));
-                        tooltip.appendChild(r);
-                    }
-                }
-            }
+            marquee.appendChild(track);
+            tooltip.appendChild(marquee);
         }
     }
 
