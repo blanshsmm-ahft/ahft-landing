@@ -72,7 +72,6 @@ desktop — колонка справа от текста либо блок по
 ## Компоненты
 
 - `.btn` — pill, `bg-fill text-on-fill`, hover `opacity-85`; `.btn--light` на инверсии.
-- `.tabbar` — мобильная жидкая плашка (mobile-only), blur + white/60.
 - Форма `.contact-form` / `.field` / `.form-control` — `gap-4`, md-грид `gap-x-20 gap-y-6`.
 - Факт-бар hero: 4 ячейки `border-t border-line pt-4`, только md+.
 

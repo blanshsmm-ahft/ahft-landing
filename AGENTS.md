@@ -76,12 +76,12 @@
   `prefers-reduced-motion`, `.catalog-spin`) удалён из `src/style.css`,
   `.tabbar` убран из hideables в `src/motion.ts` (он прячет только лого).
   НЕ возвращать без явной просьбы.
-  CSS-файл `spin-strip.webp` и `src/catalogSpin.ts` остаются в проекте, но
-  `.catalog-spin` в DOM нет — `initCatalogSpin` безвреден (`if (!el) return`).
+  Остатки функционала удалены при чистке легаси: файл `assets/spin-strip.webp`
+  и модуль `src/catalogSpin.ts` (`.catalog-spin` в DOM нет, инициализатор не нужен).
 - Навигация (`data-nav="#…"`) — в `header nav` на ВСЕХ ширинах
   (ссылки «Где купить»/«Партнёрам»/«Контакты»: `#where`, `#join`, `#values`;
   каталога в навигации нет). Активный раздел (`.is-active`)
-  синхронизируется через `src/tabBar.ts`.
+  синхронизируется через `src/nav.ts`.
   Контейнер header ПО ПРОСЬБЕ ПОКАЗАН И НА МОБИЛКЕ (`flex`, раньше `hidden md:flex`):
   «меню размести в верхней части экрана как на десктопе без фикса».
   Структура header: `<div class="mx-auto flex max-w-[1100px] flex-col items-stretch
@@ -264,8 +264,8 @@
 - ДАННЫЕ КАРТЫ (регионы/города/продавцы) синхронизируются из Google-таблицы
   (лист `gid=0`,
   https://docs.google.com/spreadsheets/d/1MQPc-YKZSDvWNdJTrDOxDIGUfXD9SH-hhZqwvlKxB9g).
-  Активный файл — `public/regions.json` (его грузит `src/map.ts`; `assets/regions.json`
-  — ЛЕГАСИ для старого неиспользуемого `script.js`, не трогать). Схема `Region`:
+  Активный файл — `public/regions.json` (его грузит `src/map.ts`). Легаси-дубль
+  `assets/regions.json` и старый `script.js` удалены при чистке. Схема `Region`:
   `key,name,okrug,cx,cy` — геометрия (НЕ меняется при синхронизации), `sales,cities[],shops[]`
   — данные продаж. Синхронизация (последняя — 09.2026):
   - берутся все строки листа ДО секции «Зарубежные регионы» (Казахстан/Астана/Алматы
@@ -694,6 +694,14 @@
 
 ## Деплой (GitHub Pages)
 
+- **ВАЖНОЕ ПРАВИЛО (действует всегда): деплой на GitHub НЕ выполнять без
+  локального предпросмотра и ЯВНОГО подтверждения пользователя.** Порядок:
+  1) сделать изменения; 2) собрать и запустить локальный предпросмотр
+  (`npm run build` + `npm run preview`, либо `npm run dev`), показать/описать
+  результат; 3) дождаться явного «деплой можно / пушь / ок» от пользователя;
+  4) только после этого делать `git push` в `main` (он триггерит автодеплой).
+  Push в `main` БЕЗ этого подтверждения ЗАПРЕЩЁН — и для авто-деплоя, и для
+  ручного запуска через Actions.
 - Репозиторий: https://github.com/blanshsmm-ahft/ahft-landing (public),
   живой сайт: https://blanshsmm-ahft.github.io/ahft-landing/.
 - Деплой АВТОМАТИЧЕСКИЙ: push в `main` → GitHub Actions

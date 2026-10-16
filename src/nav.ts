@@ -1,6 +1,6 @@
 const SECTIONS = ['#catalog', '#where', '#join', '#values'];
 
-export function initTabBar(): void {
+export function initNav(): void {
     const items = Array.from(document.querySelectorAll<HTMLElement>('[data-nav]'));
 
     const update = (): void => {
