@@ -103,7 +103,8 @@
   в `<head>` добавлен `preload` Regular. Кириллица в woff2 есть (проверено fontTools).
   Удалены OTF из `public/fonts/` и корневой дубль `fonts/`. Файлы: `GratoGroteskCY-*.woff2`.
 - **SEO/соцсети:** удалены мета-теги Netlify и локальная папка `.netlify`; добавлены
-  `canonical`, Open Graph и Twitter Card (без `og:image`).
+  `canonical`, Open Graph и Twitter Card (`summary_large_image`); OG-картинка —
+  `public/og.png` (1200×630, отдаётся как `/og.png`).
 - **Иерархия заголовков:** в `#about` и `#catalog` добавлены визуально скрытые
   `<h2 class="sr-only">` → порядок `H1→H2→H3` (был `H1→H3`).
 - **Чистка ассетов:** удалены 11 неиспользуемых файлов (в т.ч. `Strawberry-chrome.png` ~1 МБ,

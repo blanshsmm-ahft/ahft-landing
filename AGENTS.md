@@ -701,8 +701,9 @@
 - **Hero-картинка** — `assets/hero-mob.webp`, обёрнута в `<picture>`: первым `<source>` для
   `md+` идёт прозрачный пиксель (data-URI), чтобы десктоп не грузил мобильную картинку.
   Файла `hero-mob.png` больше нет. Если менять картинку — обновлять и `width/height`.
-- **`<head>`:** есть `canonical`, Open Graph и Twitter Card (без `og:image`), favicon, preload.
-  Мета-теги Netlify удалены — хостинг GitHub Pages.
+- **`<head>`:** есть `canonical`, Open Graph (с `og:image` — `public/og.png`, 1200×630)
+  и Twitter Card (`summary_large_image`), favicon, preload. Мета-теги Netlify удалены —
+  хостинг GitHub Pages.
 - **Заголовки:** `#about` и `#catalog` содержат скрытый `<h2 class="sr-only">` для корректной
   иерархии `H1→H2→H3`. Видимые eyebrow оставлять `<p>`; в `<h2>` их НЕ превращать
   (видимый h2 каталога удалён по просьбе).
