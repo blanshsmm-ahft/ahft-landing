@@ -489,8 +489,14 @@
                     </div>
                 </div>
             </div>
-            <img src="assets/237_1.svg" alt="" class="mt-6 hidden w-full h-auto md:-mb-[calc(10.465%_+_112px)] md:mt-8 md:block md:translate-y-[36px]">
-            <img src="assets/237_mob.svg" alt="" class="mt-6 block w-full h-auto -mb-[calc(20.816%_+_48px)] translate-y-[16%] md:hidden">
+            <picture class="mt-6 hidden w-full md:-mb-[calc(10.465%_+_112px)] md:mt-8 md:block md:translate-y-[36px]">
+                <source media="(max-width: 767px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                <img src="assets/237_1.svg" alt="" class="block h-auto w-full">
+            </picture>
+            <picture class="mt-6 block w-full -mb-[calc(20.816%_+_48px)] translate-y-[16%] md:hidden">
+                <source media="(min-width: 768px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                <img src="assets/237_mob.svg" alt="" class="block h-auto w-full">
+            </picture>
         </section>
 
         </main>
