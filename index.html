@@ -2,15 +2,24 @@
 <html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-<!-- This site is hosted on Netlify. Anyone can build and deploy a site
-     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=732e3359-ff34-4d51-a388-d510bed2138f
-     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
-<meta name="hosting-provider" content="Netlify">
-<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=732e3359-ff34-4d51-a388-d510bed2138f">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AHFT — кальянный табак. Линейки Blansh&nbsp;и&nbsp;Nuar. Где купить, каталог ароматов и сотрудничество.">
+    <meta name="description" content="AHFT — кальянный табак. Линейки Blansh и Nuar. Где купить, каталог ароматов и сотрудничество.">
     <title>A.H.F. Tobacco — производитель кальянного табака</title>
+    <link rel="canonical" href="https://blanshsmm-ahft.github.io/ahft-landing/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="A.H.F. Tobacco">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:url" content="https://blanshsmm-ahft.github.io/ahft-landing/">
+    <meta property="og:title" content="A.H.F. Tobacco — производитель кальянного табака">
+    <meta property="og:description" content="AHFT — кальянный табак. Линейки Blansh и Nuar. Где купить, каталог ароматов и сотрудничество.">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="A.H.F. Tobacco — производитель кальянного табака">
+    <meta name="twitter:description" content="AHFT — кальянный табак. Линейки Blansh и Nuar. Где купить, каталог ароматов и сотрудничество.">
+
     <link rel="icon" type="image/svg+xml" href="assets/favicon_ahft_sign-logo.svg">
+    <link rel="preload" href="/fonts/GratoGroteskCY-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <script type="module" src="/src/main.ts"></script>
   
 </head>
@@ -59,12 +68,16 @@
                     </dl>
                     <a href="#catalog" class="btn mt-10 md:mt-auto md:w-full md:-translate-x-[10px] md:-translate-y-[12px]">Каталог ароматов</a>
                 </div>
-                <img src="assets/hero-mob.png" alt="" class="mt-10 w-full rounded-2xl md:hidden">
+                <picture class="mt-10 block w-full md:hidden">
+                    <source media="(min-width: 768px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                    <img src="assets/hero-mob.webp" alt="" width="1080" height="1175" class="block w-full rounded-2xl">
+                </picture>
             </div>
         </section>
 
         <section id="about" class="py-12 md:py-28" aria-label="О продукте">
             <div class="mx-auto max-w-[1100px] px-5">
+                <h2 class="sr-only">О продукте</h2>
                 <p class="mb-6 text-[0.825rem] font-medium uppercase tracking-[0.5px] text-mute">Внимание к людям</p>
                 <div class="md:grid md:grid-cols-2 md:items-start md:gap-8">
                         <p class="text-[clamp(1.4rem,4vw,2rem)] leading-[1.4] tracking-[-0.5px] md:text-[1.5rem]">Наш продукт родился из запроса кальянных миксологов. Им нужны были чистые ароматы, которые звучат ровно так, как заявлено на упаковке.</p>
@@ -75,6 +88,7 @@
 
 <section id="catalog" class="bg-surface py-12 md:py-28">
             <div class="mx-auto max-w-[1100px] px-5" >
+                <h2 class="sr-only">Каталог ароматов</h2>
                 <p class="mb-8 text-[0.825rem] font-medium uppercase tracking-[0.5px] text-mute">Каталог ароматов</p>
                 <div class="mb-8 md:mb-[39px] md:mt-8 md:flex md:items-start md:gap-4">
                     <img src="assets/blansh_logo.svg" alt="Blansh" class="block h-[49.06px] w-auto">

@@ -93,6 +93,26 @@
 - iOS status bar: логотип AHFT и тогл темы — отдельные fixed-элементы, `mix-blend-difference`;
   запрет на full-width fixed-шапку; `main { margin-top: 100px }`.
 
+### Производительность, шрифты и SEO (16.10.2026)
+
+- **Hero-картинка:** `assets/hero-mob.png` (670 КБ) → `assets/hero-mob.webp` (~64 КБ),
+  обёрнута в `<picture>`; на `md+` первым `<source>` подставляется прозрачный пиксель,
+  поэтому десктоп мобильную картинку НЕ качает. Добавлены `width/height` (без CLS).
+- **Шрифты:** OTF (493 КБ) → WOFF2 (228 КБ) из брендовой папки `Grato Grotesk/Web/woff2`
+  (Regular/Medium/Bold). `@font-face` в `src/style.css` переведён на `format("woff2")`,
+  в `<head>` добавлен `preload` Regular. Кириллица в woff2 есть (проверено fontTools).
+  Удалены OTF из `public/fonts/` и корневой дубль `fonts/`. Файлы: `GratoGroteskCY-*.woff2`.
+- **SEO/соцсети:** удалены мета-теги Netlify и локальная папка `.netlify`; добавлены
+  `canonical`, Open Graph и Twitter Card (без `og:image`).
+- **Иерархия заголовков:** в `#about` и `#catalog` добавлены визуально скрытые
+  `<h2 class="sr-only">` → порядок `H1→H2→H3` (был `H1→H3`).
+- **Чистка ассетов:** удалены 11 неиспользуемых файлов (в т.ч. `Strawberry-chrome.png` ~1 МБ,
+  `map.svg`, `237.svg`, `arrow.svg`, логотипы-легаси) и `.DS_Store` (в т.ч. `public/.DS_Store`,
+  который попадал в `dist`).
+- Итог загрузки (headless): десктоп ~1,19 МБ → **~228 КБ**; мобилка ~1,19 МБ → **~292 КБ**.
+- Осталось (не критично): `237_1.svg`/`237_mob.svg` (~10 КБ) по-прежнему грузятся оба
+  независимо от брейкпоинта — можно закрыть тем же `<picture>`.
+
 ## Развёртывание (public)
 
 ### Netlify — 🔴 онлайн
